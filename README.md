@@ -14,3 +14,5 @@ from aws_ssm import ssm
 ssm = ssm.SSM()
 ssm.setup_env_from_ssm()
 ```
+
+It will push all env variable in "/tmp/aws_ssm_env_devlibx" file

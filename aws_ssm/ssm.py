@@ -3,8 +3,8 @@ import os
 
 ssm_client = boto3.client('ssm', region_name="ap-south-1")
 
-print("ENV=", os.getenv('ENV'))
-print("SERVICE=", os.getenv('SERVICE'))
+print("#ENV=", os.getenv('ENV'))
+print("#SERVICE=", os.getenv('SERVICE'))
 
 
 class SSM(object):
@@ -14,7 +14,8 @@ class SSM(object):
         service = os.getenv('SERVICE', "")
         key = '/conf/' + service + '/' + env + '/v1'
 
-        next_token = None
+        f = open("/tmp/aws_ssm_env_devlibx", "a")
+        f.truncate(0)
         response = None
         for i in range(10):
             if response is None:
@@ -42,4 +43,6 @@ class SSM(object):
                     nameWithKey = p['Name']
                     name = nameWithKey.replace(key + "/", '')
                     value = p['Value']
-                    print(name, "=", value)
+                    # print("export %s=%s" % (name, value))
+                    f.write("export %s=%s\n" % (name, value))
+        f.close()
