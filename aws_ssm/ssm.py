@@ -17,7 +17,7 @@ class SSM(object):
         f = open("/tmp/aws_ssm_env_devlibx", "a")
         f.truncate(0)
         response = None
-        for i in range(10):
+        for i in range(100):
             if response is None:
                 response = ssm_client.get_parameters_by_path(
                     Path=key,
@@ -28,21 +28,26 @@ class SSM(object):
                     ],
                 )
             else:
-                response = ssm_client.get_parameters_by_path(
-                    Path=key,
-                    Recursive=True,
-                    WithDecryption=True,
-                    MaxResults=10,
-                    ParameterFilters=[
-                    ],
-                    NextToken=response["NextToken"]
-                )
+                if response is not None and "NextToken" in response is not None:
+                    response = ssm_client.get_parameters_by_path(
+                        Path=key,
+                        Recursive=True,
+                        WithDecryption=True,
+                        MaxResults=10,
+                        ParameterFilters=[
+                        ],
+                        NextToken=response["NextToken"]
+                    )
+                else:
+                    break
 
             if response is not None and response['Parameters'] is not None:
                 for p in response['Parameters']:
                     nameWithKey = p['Name']
                     name = nameWithKey.replace(key + "/", '')
                     value = p['Value']
-                    # print("export %s=%s" % (name, value))
+                    print("export %s=%s" % (name, value))
                     f.write("export %s=%s\n" % (name, value))
+            else:
+                break
         f.close()
