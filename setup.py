@@ -9,7 +9,7 @@ description = 'Python DSL for setting up Flask app CDC'
 
 setuptools.setup(
     name='aws-ssm-devlibx',
-    version="0.0.5",
+    version="0.0.6",
     description='{0}\n\n{1}'.format(description, history),
     long_description_content_type="text/markdown",
     long_description=open("README.md").read(),

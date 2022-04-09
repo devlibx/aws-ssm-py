@@ -18,6 +18,8 @@ class SSM(object):
         f.truncate(0)
         response = None
         for i in range(100):
+            print("========== Iteration %s" % i)
+
             if response is None:
                 response = ssm_client.get_parameters_by_path(
                     Path=key,
@@ -28,7 +30,7 @@ class SSM(object):
                     ],
                 )
             else:
-                if response is not None and "NextToken" in response is not None:
+                if response is not None and "NextToken" in response:
                     response = ssm_client.get_parameters_by_path(
                         Path=key,
                         Recursive=True,
@@ -41,6 +43,8 @@ class SSM(object):
                 else:
                     break
 
+            print(response)
+
             if response is not None and response['Parameters'] is not None:
                 for p in response['Parameters']:
                     nameWithKey = p['Name']
@@ -50,4 +54,5 @@ class SSM(object):
                     f.write("export %s=%s\n" % (name, value))
             else:
                 break
+
         f.close()
