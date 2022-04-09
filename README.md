@@ -1,7 +1,7 @@
 This is a helper module to allow you to capture all the request/response which comes to your Flask app.
 
 ```shell
-pip install flask-cdc-devlibx
+pip install aws_ssm-devlibx
 ```
 
 ### How to use
