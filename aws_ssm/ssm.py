@@ -10,6 +10,7 @@ print("#SERVICE=", os.getenv('SERVICE'))
 class SSM(object):
 
     def setup_env_from_ssm(self):
+        ssmDebug = os.getenv('SSM_DEBUG', "")
         env = os.getenv('ENV', "")
         service = os.getenv('SERVICE', "")
         key = '/conf/' + service + '/' + env + '/v1'
@@ -43,14 +44,16 @@ class SSM(object):
                 else:
                     break
 
-            print(response)
+            if ssmDebug == "true":
+                print(response)
 
             if response is not None and response['Parameters'] is not None:
                 for p in response['Parameters']:
                     nameWithKey = p['Name']
                     name = nameWithKey.replace(key + "/", '')
                     value = p['Value']
-                    print("export %s=%s" % (name, value))
+                    if ssmDebug == "true":
+                        print("export %s=%s" % (name, value))
                     f.write("export %s=%s\n" % (name, value))
             else:
                 break
